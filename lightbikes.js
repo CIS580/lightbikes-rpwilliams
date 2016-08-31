@@ -1,9 +1,17 @@
 var canvas = document.getElementById('screen');
 var ctx = canvas.getContext('2d'); // Get a 2D drawing context
-var speed = 1/16/1000; // 16 frames per second
+var backCanvas = document.create('canvas');
+backCanvas.width = canvas.width;
+backCanvas.height = canvas.height;
+var backCtx = backCanvas.getContext('2d');
+
+var speed = 1/16/1000; // 16 frames per seco
 
 var x = 0;
 var y = 0;
+
+var image = new Image();
+image.src = "http://wallpapercave.com/wp/rhs5EQW.jpg";
 
 var input = 
 {
@@ -70,16 +78,38 @@ window.onkeyup = function(event)
 	}
 }
 
-function loop()
+function loop(timestamp)
 {
 	if(input.up) y -= 1;
 	if (input.down) y += 1;
 	if(input.left) x -= 1;
 	if(input.right) x += 1;
+
+	backCtx.clearRect(0,0, canvas.width, canvas.height);
+
+	backCtx.drawImage(image, 400, 200, 2000, 1000, 0, 0, 2000, 1000);
+
+	for(i = 0; i < 100; i++)
+	{
+		backCtx.fillStyle = "blue";
+		backCtx.fillRect(
+			(i*20) % 100,
+			(i*20) % 100,
+			10,
+			10
+		 )
+	}
 	
-	ctx.fillRect(x, y, 10, 10);
-	ctx.fillStyle = "purple";	
-	setTimeout(loop, speed);	
+	backCtx.fillRect(x, y, 10, 10);
+	backCtx.fillStyle = "purple";	
+	//setTimeout(loop, speed);	
+
+	//ctx.drawImage(backCtx.draw);
+
+	requestAnimationFrame(loop);
 }
-loop();
+//var intervalID = setInterval(loop, speed);
+requestAnimationFrame(loop);
+
+//loop();
 
